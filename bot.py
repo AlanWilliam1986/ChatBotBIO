@@ -22,6 +22,6 @@ def chat_with_gpt(message):
         )
         bot.reply_to(message, response['choices'][0]['message']['content'])
     except Exception as e:
-        bot.reply_to(message, "Desculpe, ocorreu um erro ao processar sua pergunta.")
+        bot.reply_to(message, "Desculpe, ocorreu um erro ao processar sua pergunta. ok?")
 
 bot.polling()
