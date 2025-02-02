@@ -1,0 +1,6 @@
+openai
+telebot
+python-dotenv
+pdfplumber
+PyPDF2
+requests
