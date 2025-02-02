@@ -6,8 +6,8 @@ import os
 # Carregar variáveis de ambiente
 load_dotenv()
 
-TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+TELEGRAM_BOT_TOKEN = "8072657227:AAFZ5hvKtODzCA_r3KcdsLvDscw47C2Iupw" 
+OPENAI_API_KEY = "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"
 
 bot = telebot.TeleBot(TELEGRAM_BOT_TOKEN)
 openai.api_key = OPENAI_API_KEY
