@@ -6,8 +6,8 @@ import os
 # Carregar variáveis de ambiente
 load_dotenv()
 
-TELEGRAM_BOT_TOKEN = userdata.get('TELEGRAM_BOT_TOKEN', '8072657227:AAFZ5hvKtODzCA_r3KcdsLvDscw47C2Iupw')
-OPENAI_API_KEY = userdata.get('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')
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
 bot = telebot.TeleBot(TELEGRAM_BOT_TOKEN)
 openai.api_key = OPENAI_API_KEY
@@ -22,6 +22,6 @@ def chat_with_gpt(message):
         )
         bot.reply_to(message, response['choices'][0]['message']['content'])
     except Exception as e:
-        bot.reply_to(message, "Desculpe, ocorreu um erro ao processar sua pergunta. ok?")
+        bot.reply_to(message, "Desculpe, ocorreu um erro ao processar sua pergunta.")
 
 bot.polling()
