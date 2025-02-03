@@ -22,6 +22,7 @@ def chat_with_gpt(message):
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": message.text}]
+        ).choices[0].message.content
         )
         bot.reply_to(message, response['choices'][0]['message']['content'])
     except Exception as e:
