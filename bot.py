@@ -36,10 +36,11 @@ def chat_with_gpt(message):
 # Configurar Webhook
 @app.route("/")
 def set_webhook():
-    bot.remove_webhook()
-    bot.set_webhook(url=WEBHOOK_URL)
+    bot.remove_webhook()  # Remover qualquer webhook existente
+    bot.set_webhook(url=WEBHOOK_URL)  # Definir o novo webhook
     return "Webhook configurado!", 200
 
 # Iniciar servidor Flask
 if __name__ == "__main__":
+    # Certifique-se de que o polling não está sendo iniciado
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", 8080)))
