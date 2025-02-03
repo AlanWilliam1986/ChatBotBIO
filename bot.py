@@ -43,4 +43,5 @@ def run_flask():
 # Iniciar o Flask em uma thread separada
 threading.Thread(target=run_flask).start()
 
-bot.polling()
+bot.infinity_polling(timeout=10, long_polling_timeout=5)
+
