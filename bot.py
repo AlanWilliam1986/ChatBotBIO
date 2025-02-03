@@ -1,19 +1,24 @@
 import telebot
 import openai
-from dotenv import load_dotenv
 import os
+from flask import Flask, request
 
 # Carregar variáveis de ambiente
-load_dotenv()
-
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
-print(f"TELEGRAM_BOT_TOKEN: {TELEGRAM_BOT_TOKEN}")
-
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-print(f"OPENAI_API_KEY: {OPENAI_API_KEY}")
+WEBHOOK_URL = f"https://seu-app-na-render.onrender.com/{TELEGRAM_BOT_TOKEN}"  # Altere para a URL do seu app na Render
 
 bot = telebot.TeleBot(TELEGRAM_BOT_TOKEN)
 openai.api_key = OPENAI_API_KEY
+app = Flask(__name__)
+
+# Rota do webhook
+@app.route(f'/{TELEGRAM_BOT_TOKEN}', methods=['POST'])
+def webhook():
+    json_str = request.get_data().decode('utf-8')
+    update = telebot.types.Update.de_json(json_str)
+    bot.process_new_updates([update])
+    return "OK", 200
 
 # Função para responder mensagens
 @bot.message_handler(func=lambda message: True)
@@ -22,26 +27,19 @@ def chat_with_gpt(message):
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": message.text}]
-        ).choices[0].message.content
+        )
         bot.reply_to(message, response['choices'][0]['message']['content'])
     except Exception as e:
-        print(f"Erro na API da OpenAI: {e}")  
-        bot.reply_to(message, "Desculpe, ocorreu um erro ao processar sua pergunta, ok?")
+        print(f"Erro na API da OpenAI: {e}")
+        bot.reply_to(message, "Desculpe, ocorreu um erro ao processar sua pergunta.")
 
-from flask import Flask
-import threading
+# Configurar Webhook
+@app.route("/")
+def set_webhook():
+    bot.remove_webhook()
+    bot.set_webhook(url=WEBHOOK_URL)
+    return "Webhook configurado!", 200
 
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return "Bot está rodando!"
-
-def run_flask():
-    app.run(host='0.0.0.0', port=int(os.getenv("PORT", 8080)))
-
-# Iniciar o Flask em uma thread separada
-threading.Thread(target=run_flask).start()
-
-bot.infinity_polling(timeout=10, long_polling_timeout=5)
-
+# Iniciar servidor Flask
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.getenv("PORT", 8080)))
