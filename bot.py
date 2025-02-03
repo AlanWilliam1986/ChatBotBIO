@@ -33,11 +33,11 @@ def chat_with_gpt(message):
         print(f"Erro na API da OpenAI: {e}")
         bot.reply_to(message, "Desculpe, ocorreu um erro ao processar sua pergunta.")
 
-# Configurar Webhook
-@app.route("/")
+# Rota para configurar o webhook
+@app.route("/set_webhook", methods=['GET'])
 def set_webhook():
-    bot.remove_webhook()
-    bot.set_webhook(url=WEBHOOK_URL)
+    bot.remove_webhook()  # Remove qualquer webhook existente
+    bot.set_webhook(url=WEBHOOK_URL)  # Configura o webhook novamente
     return "Webhook configurado!", 200
 
 # Iniciar servidor Flask
